@@ -1,6 +1,7 @@
 # SelfcontainingC-
 Selfcontainng dlls in C#
-copy this line to powershell
+
+<p>copy this line to powershell</p>
 
 <pre><code>dotnet publish -r win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true --self-contained true  
 </code></pre>
