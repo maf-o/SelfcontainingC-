@@ -1,0 +1,2029 @@
+
+		<!DOCTYPE html>
+		<html lang="en-us">
+			
+		<head>
+			<title>Self-Contained Single-File does not produce a single file - Microsoft Q&amp;A</title>
+			<meta charset="utf-8" />
+			<!-- Use the .htaccess and remove these lines to avoid edge case issues. More info: h5bp.com/i/378 -->
+			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+			<meta name="title" content="Self-Contained Single-File does not produce a single file - Microsoft Q&amp;A" />
+			<meta name="description" content="I have a small .Net 5 console application with no dependencies on third party components.   
+I have set it up to publish as a self-contained single-file.  
+However, in the publish directory is the EXE file and four DLLs. The EXE file will not run without…" />
+			<!-- Mobile viewport optimized: h5bp.com/viewport -->
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<meta name="locale" content="en-us" />
+			<link rel="canonical" href="https://learn.microsoft.com/en-us/answers/questions/296816/self-contained-single-file-does-not-produce-a-sing" />
+			<meta property="og:title" content="Self-Contained Single-File does not produce a single file - Microsoft Q&amp;A" />
+			<meta property="og:type" content="website" />
+			<meta property="og:description" content="I have a small .Net 5 console application with no dependencies on third party components.   
+I have set it up to publish as a self-contained single-file.  
+However, in the publish directory is the EXE file and four DLLs. The EXE file will not run without…" />
+			<meta
+				property="og:image"
+				content="https://docs.microsoft.com/en-us/media/logos/logo-ms-social.png"
+			/>
+			<meta property="og:image:alt" content="Microsoft Logo" />
+
+			
+		<meta name="pageType" content=QnA />
+		<meta
+			name="uhfHeaderId"
+			content=answersv2
+		/>
+		<meta name="userId" content="" />
+
+		
+					<meta name="createdAt" content="2021-03-03T11:31:44.523+00:00" />
+					<meta name="updatedAt" content="2022-09-21T08:34:59.98+00:00" />
+					<meta
+						name="pageCount"
+						content="1"
+					/>
+					<meta name="tag" content="https://authoring-docs-microsoft.poolparty.biz/devrel/10ca2cf1-1211-4f10-85a4-9cf83b59cc68" />
+
+					<script type="application/ld+json">
+						{"@context":"https://schema.org","@type":"QAPage","mainEntity":{"@type":"Question","id":296816,"name":"Self-Contained Single-File does not produce a single file","text":"\u003cp\u003eI have a small .Net 5 console application with no dependencies on third party components.   \u003cbr /\u003e\nI have set it up to publish as a self-contained single-file.  \u003cbr /\u003e\nHowever, in the publish directory is the EXE file and four DLLs. The EXE file will not run without those DLLs being present.  \u003cbr /\u003e\nThe DLLs are:  \u003c/p\u003e\n\u003cp\u003eclrcompression.dll  \u003cbr /\u003e\nclrjit.dll  \u003cbr /\u003e\ncoreclr.dll  \u003cbr /\u003e\nmscordaccore.dll  \u003c/p\u003e\n\u003cp\u003eWhy is it Visual Studio does not understand \u003cstrong\u003esingle\u003c/strong\u003e in Single-File publish ?  \u003c/p\u003e\n\u003cp\u003eAndy  \u003c/p\u003e","answerCount":3,"upvoteCount":3,"author":"Andrew Fraser","authorId":"8ef43add-cb02-4b70-92b7-1f587a386006","acceptedAnswer":{"@type":"Answer","id":297891,"text":"\u003cp\u003eYou need use IncludeNativeLibrariesForSelfExtract or IncludeAllContentForSelfExtract.     \u003c/p\u003e\n\u003cp\u003eEither use it like this in the .Net CLI:    \u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003edotnet publish -r win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true --self-contained true  \n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eEither add it in the projectName.csproj file:    \u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003e \u0026lt;IncludeAllContentForSelfExtract\u0026gt;true\u0026lt;/IncludeAllContentForSelfExtract\u0026gt;  \n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eIn this way, there will be only one exe file and one pdb file after release.    \u003c/p\u003e\n\u003chr /\u003e\n\u003cp\u003eIf the response is helpful, please click \u0026quot;\u003cstrong\u003eAccept Answer\u003c/strong\u003e\u0026quot; and upvote it.    \u003cbr /\u003e\n\u003cstrong\u003eNote: Please follow the steps in our \u003ca href=\"https://learn.microsoft.com/en-us/answers/articles/67444/email-notifications.html\"\u003edocumentation\u003c/a\u003e to enable e-mail notifications if you want to receive the related email notification for this thread.\u003c/strong\u003e    \u003c/p\u003e\n","upvoteCount":3,"author":"Timon Yang-MSFT","authorId":"3a6b047a-45c9-4555-8812-d37974ceddc5","url":"https://learn.microsoft.com/en-us/answers/questions/296816/answers/297891"},"suggestedAnswer":[{"@type":"Answer","id":885154,"text":"\u003cp\u003ethe \u0026lt;IncludeAllContentForSelfExtract\u0026gt; tell the publish, that you want the dll extracted during publish (required to debug). do not do this if you want a single file. also you need to supply a runtime.     \u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003e\u0026lt;Project Sdk=\u0026quot;Microsoft.NET.Sdk\u0026quot;\u0026gt;  \n  \u0026lt;PropertyGroup\u0026gt;  \n    \u0026lt;OutputType\u0026gt;Exe\u0026lt;/OutputType\u0026gt;  \n    \u0026lt;TargetFramework\u0026gt;net6.0\u0026lt;/TargetFramework\u0026gt;  \n    \u0026lt;ImplicitUsings\u0026gt;enable\u0026lt;/ImplicitUsings\u0026gt;  \n    \u0026lt;Nullable\u0026gt;enable\u0026lt;/Nullable\u0026gt;  \n    \u0026lt;PublishSingleFile\u0026gt;true\u0026lt;/PublishSingleFile\u0026gt;  \n    \u0026lt;RuntimeIdentifier\u0026gt;osx.12-arm64\u0026lt;/RuntimeIdentifier\u0026gt;  \n  \u0026lt;/PropertyGroup\u0026gt;  \n\u0026lt;/Project\u0026gt;  \n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eNote: for MacOs the Mac app bundler format is used, so there are fewer restrictions than windows.    \u003c/p\u003e\n","upvoteCount":0,"author":"Bruce (SqlWork.com)","authorId":"6f6bb61e-afe6-4f38-9f92-62a4655b7267","url":"https://learn.microsoft.com/en-us/answers/questions/296816/answers/885154"},{"@type":"Answer","id":1017164,"text":"\u003cp\u003etry as following with \u003ccode\u003e.Net core 6.0.*\u003c/code\u003e     \u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003e\u0026lt;Project Sdk=\u0026quot;Microsoft.NET.Sdk\u0026quot;\u0026gt;  \n  \u0026lt;PropertyGroup\u0026gt;  \n    \u0026lt;OutputType\u0026gt;Exe\u0026lt;/OutputType\u0026gt;  \n    \u0026lt;TargetName\u0026gt;trade-plus\u0026lt;/TargetName\u0026gt;  \n    \u0026lt;TargetFramework\u0026gt;net6.0-windows\u0026lt;/TargetFramework\u0026gt;  \n    \u0026lt;RuntimeIdentifier\u0026gt;win-x64\u0026lt;/RuntimeIdentifier\u0026gt;  \n    \u0026lt;PlatformTarget\u0026gt;x64\u0026lt;/PlatformTarget\u0026gt;  \n    \u0026lt;AssemblyName\u0026gt;app-assembly-name\u0026lt;/AssemblyName\u0026gt;  \n    \u0026lt;Version\u0026gt;1.0.0.1\u0026lt;/Version\u0026gt;  \n    \u0026lt;FileVersion\u0026gt;1.0.0.1\u0026lt;/FileVersion\u0026gt;  \n    \u0026lt;Platforms\u0026gt;x64\u0026lt;/Platforms\u0026gt;  \n  \u0026lt;/PropertyGroup\u0026gt;  \n  \u0026lt;PropertyGroup Condition=\u0026quot;'$(Configuration)|$(Platform)'=='Release|x64'\u0026quot;\u0026gt;  \n    \u0026lt;PlatformTarget\u0026gt;x64\u0026lt;/PlatformTarget\u0026gt;  \n    \u0026lt;Optimize\u0026gt;True\u0026lt;/Optimize\u0026gt;  \n    \u0026lt;DebugType\u0026gt;none\u0026lt;/DebugType\u0026gt;  \n  \u0026lt;/PropertyGroup\u0026gt;  \n  \u0026lt;PropertyGroup\u0026gt;  \n    \u0026lt;ProduceReferenceAssembly\u0026gt;False\u0026lt;/ProduceReferenceAssembly\u0026gt;  \n  \u0026lt;/PropertyGroup\u0026gt;  \n\u0026lt;/Project\u0026gt;  \n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eand run this command at respective project directory \u003ccode\u003edotnet publish -r win-x64 -c Release -o bin/win-x64/native /p:SelfContained=true /p:PublishSingleFile=true /p:PublishReadyToRun=true\u003c/code\u003e    \u003cbr /\u003e\nread more \u003ca href=\"https://learn.microsoft.com/en-us/dotnet/core/deploying/single-file/overview?tabs=cli\"\u003eSingle-file deployment and executable\u003c/a\u003e    \u003c/p\u003e\n","upvoteCount":0,"author":"Rajib Chy","authorId":"cdefa112-fb97-4722-af67-f085c1458193","url":"https://learn.microsoft.com/en-us/answers/questions/296816/answers/1017164"}]}}
+					</script>
+			  
+	
+
+			<link rel="stylesheet" href="/static/assets/0.4.022562641/styles/site-ltr.css" />
+			<script id="msdocs-script">
+		var msDocs = {
+  "environment": {
+    "accessLevel": "online",
+    "azurePortalHostname": "portal.azure.com",
+    "reviewFeatures": false,
+    "supportLevel": "production",
+    "systemContent": true,
+    "siteName": "learn",
+    "legacyHosting": false
+  },
+  "data": {
+    "contentLocale": "en-us",
+    "contentDir": "ltr",
+    "userLocale": "en-us",
+    "userDir": "ltr",
+    "pageTemplate": "Question",
+    "brand": "docs",
+    "context": {},
+    "hasBinaryRating": false,
+    "hasGithubIssues": false,
+    "showFeedbackReport": false,
+    "enableTutorialFeedback": false,
+    "feedbackSystem": "",
+    "feedbackGitHubRepo": "",
+    "feedbackProductUrl": "",
+    "contentGitUrl": "",
+    "extendBreadcrumb": false,
+    "isEditDisplayable": false,
+    "hideViewSource": false,
+    "hasPageActions": false,
+    "hasBookmark": true,
+    "isPermissioned": false,
+    "hasShare": true,
+    "hasRecommendations": false,
+    "contributors": []
+  },
+  "functions": {}
+};;
+	</script>
+			<script src="https://wcpstatic.microsoft.com/mscc/lib/v2/wcp-consent.js"></script>
+			<script src="https://js.monitor.azure.com/scripts/c/ms.jsll-3.min.js"></script>
+			<script src="/_themes/docs.theme/master/en-us/_themes/global/deprecation.js"></script>
+			<!-- base scripts -->
+			
+				<script src="/static/assets/0.4.022562641/scripts/en-us/index-critical-qna.js"></script>
+				<script defer src="/static/assets/0.4.022562641/scripts/en-us/index-qna.js"></script>
+			
+		</head>
+	
+			<body>
+				
+		<div class="header-holder has-default-focus">
+			<a
+				href="#main"
+				class="skip-to-main-link has-outline-color-text visually-hidden-until-focused position-fixed has-inner-focus focus-visible top-0 left-0 right-0 padding-xs has-text-centered has-body-background-medium"
+				>Skip to main content</a
+			>
+
+			<div id="ignite-banner-holder" class="has-default-focus has-overflow-hidden"></div>
+
+			<div hidden id="cookie-consent-holder"></div>
+			<!-- Unsupported browser warning -->
+			<div
+				id="unsupported-browser"
+				style="background-color: white; color: black; padding: 16px; border-bottom: 1px solid grey;"
+				hidden
+			>
+				<div style="max-width: 800px; margin: 0 auto;">
+					<p style="font-size: 24px">This browser is no longer supported.</p>
+					<p style="font-size: 16px; margin-top: 16px;">
+						Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support.
+					</p>
+					<div style="margin-top: 12px;">
+						<a
+							href="https://go.microsoft.com/fwlink/p/?LinkID=2092881 "
+							style="background-color: #0078d4; border: 1px solid #0078d4; color: white; padding: 6px 12px; border-radius: 2px; display: inline-block;"
+						>
+							Download Microsoft Edge
+						</a>
+						<a
+							href="https://learn.microsoft.com/en-us/lifecycle/faq/internet-explorer-microsoft-edge"
+							style="background-color: white; padding: 6px 12px; border: 1px solid #505050; color: #171717; border-radius: 2px; display: inline-block;"
+						>
+							More info about Internet Explorer and Microsoft Edge
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- liquid-tag banners global -->
+
+			<div id="headerAreaHolder" data-bi-name="header">
+				<header role="banner" itemscope="itemscope" itemtype="http://schema.org/Organization">
+					<div class="nav-bar">
+						<div class="nav-bar-brand">
+							<a
+								itemprop="url"
+								href="https://www.microsoft.com"
+								aria-label="Microsoft"
+								class="nav-bar-button"
+							>
+								<div
+									class="nav-bar-logo has-background-image theme-display is-light"
+									role="presentation"
+									aria-hidden="true"
+									itemprop="logo"
+									itemscope="itemscope"
+								></div>
+								<div
+									class="nav-bar-logo has-background-image theme-display is-dark is-high-contrast"
+									role="presentation"
+									aria-hidden="true"
+									itemprop="logo"
+									itemscope="itemscope"
+								></div>
+							</a>
+						</div>
+					</div>
+					<div class="nav-bar border-top is-hidden-mobile"></div>
+				</header>
+			</div>
+		</div>
+	 
+		<div class="mainContainer background-color-body has-default-focus" data-bi-name="body">
+			<div class="uhf-container has-top-padding">
+				<main id="main" role="main" data-bi-name="content" lang="en-us" dir="ltr">
+					
+					<div class="">
+						<div class="columns is-multiline margin-top-none margin-bottom-lg is-centered">
+							<section class="primary-holder column is-full is-9-desktop">
+								<div class="columns is-gapless-mobile has-large-gaps is-multiline">
+									<div id="main-column" class="column  is-full is-8-desktop">
+		<div id="question-details">
+			<div class="columns is-multiline">
+				<div id="question" class="column is-full">
+					<div id="article-header" class="margin-bottom-xs">
+						<div class="display-flex align-items-center ">
+							
+		<div
+			id="article-header-page-actions"
+			class="margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch"
+		>
+			
+		<button
+			class="collection button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm display-none display-inline-flex-tablet"
+			id="qna-add-to-collection-button"
+			data-list-type="collection"
+			data-bi-name="collection"
+			data-list-item-title="this question"
+			title="Add this question to a collection"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status is-visually-hidden"
+				>Save</span
+			>
+		</button>
+	
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary
+					class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm justify-content-flex-start button-primary "
+					aria-label="Share this question"
+					title="Share this question"
+				>
+					<span class="icon margin-none" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content padding-none">
+					
+		<button
+			class="collection button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-block justify-content-flex-start has-inner-focus margin-none display-none-tablet"
+			id="qna-add-to-collection-button"
+			data-list-type="collection"
+			data-bi-name="collection"
+			data-list-item-title="this question"
+			title="Add this question to a collection"
+		>
+			<span class="icon " aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status "
+				>Save</span
+			>
+		</button>
+	
+					
+								<div
+									aria-hidden="true"
+									class="margin-none display-none-tablet border-top"
+									data-page-action-item="overflow-all"
+								></div>
+								 <a
+											href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fanswers%2Fquestions%2F296816%2Fself-contained-single-file-does-not-produce-a-sing&text=Self-Contained%20Single-File%20does%20not%20produce%20a%20single%20file&tw_p=tweetbutton&url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fanswers%2Fquestions%2F296816%2Fself-contained-single-file-does-not-produce-a-sing"
+											class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-block justify-content-flex-start has-inner-focus margin-none share-twitter"
+											data-bi-name="twitter"
+											data-page-action-item="overflow-all"
+									  >
+											<span class="icon" aria-hidden="true">
+												<span class="docon docon-brand-twitter"></span>
+											</span>
+											<span>Twitter</span>
+									  </a>
+								 <a
+											href="https://www.linkedin.com/cws/share?url=https://learn.microsoft.com/en-us/answers/questions/296816/self-contained-single-file-does-not-produce-a-sing"
+											class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-block justify-content-flex-start has-inner-focus margin-none share-linkedin"
+											data-bi-name="linkedin"
+											data-page-action-item="overflow-all"
+									  >
+											<span class="icon" aria-hidden="true">
+												<span class="docon docon-brand-linkedin"></span>
+											</span>
+											<span>LinkedIn</span>
+									  </a>
+								 <a
+											href="https://www.facebook.com/sharer/sharer.php?u=https://learn.microsoft.com/en-us/answers/questions/296816/self-contained-single-file-does-not-produce-a-sing%0A%09%09%09%09%09%09%09%09%09%09%09"
+											class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-block justify-content-flex-start has-inner-focus margin-none share-facebook"
+											data-bi-name="facebook"
+											data-page-action-item="overflow-all"
+									  >
+											<span class="icon" aria-hidden="true">
+												<span class="docon docon-brand-facebook"></span>
+											</span>
+											<span>Facebook</span>
+									  </a>
+								 <a
+											href="mailto:?subject=
+												%5BShared%20Question%5D%20Self-Contained%20Single-File%20does%20not%20produce%20a%20single%20file&body=Self-Contained Single-File does not produce a single file%0A%0Ahttps://learn.microsoft.com/en-us/answers/questions/296816/self-contained-single-file-does-not-produce-a-sing"
+											class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-block justify-content-flex-start has-inner-focus margin-none share-email"
+											data-bi-name="email"
+											data-page-action-item="overflow-all"
+									  >
+											<span class="icon" aria-hidden="true">
+												<span class="docon docon-mail-message-fill"></span>
+											</span>
+											<span>Email</span>
+									  </a>
+						  
+				</div>
+			</details>
+		</div>
+	
+						</div>
+					</div>
+
+					
+		
+		<h1 class="title is-2">Self-Contained Single-File does not produce a single file</h1>
+		
+		<div class="level margin-none align-items-flex-start">
+			
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div class="image is-32x32 margin-right-xxs">
+					<img
+						class="border-radius-rounded"
+						loading="eager"
+						alt=""
+						src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+					/>
+			  </div> <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=8ef43add-cb02-4b70-92b7-1f587a386006"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Andrew Fraser </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">41</span>
+						<span class="is-visually-hidden">Reputation points</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2021-03-03T11:31:44.523+00:00" class="is-visually-hidden">2021-03-03T11:31:44.523+00:00</local-time> </span>
+			</div>
+		
+		</div>
+		
+					<div class="content margin-top-xxs"><p>I have a small .Net 5 console application with no dependencies on third party components.   <br />
+I have set it up to publish as a self-contained single-file.  <br />
+However, in the publish directory is the EXE file and four DLLs. The EXE file will not run without those DLLs being present.  <br />
+The DLLs are:  </p>
+<p>clrcompression.dll  <br />
+clrjit.dll  <br />
+coreclr.dll  <br />
+mscordaccore.dll  </p>
+<p>Why is it Visual Studio does not understand <strong>single</strong> in Single-File publish ?  </p>
+<p>Andy  </p>
+</div>
+					<div class="tags margin-top-xs">
+						
+		<details class="popover popover-left">
+			<summary class="tag has-text-wrap font-size-sm">
+				<span>.NET CLI</span>
+			</summary>
+			<div class="popover-content width-350-tablet padding-none">
+				<article class="card border-left-lg border-left-color-accent">
+		<div class="card-content margin-bottom-none">
+			<a class="card-title" href="/en-us/answers/tags/308/dotnetcli/">
+				.NET CLI
+			</a>
+			<div class="card-content-description">
+				A cross-platform toolchain for developing, building, running, and publishing .NET applications.
+			</div>
+		</div>
+		<div class="card-template">
+			
+			<div class="card-template-detail">
+				<span class="font-size-sm font-weight-semilight">
+					290 questions
+				</span>
+			</div>
+		</div>
+		<div class="card-footer">
+			<div class="card-footer-item">
+				<div class="buttons">
+					
+								<button class="button button-primary button-sm button-filled docs-sign-in">
+									Sign in to follow
+								</button>
+						  
+				</div>
+			</div>
+		</div>
+	</article>
+			</div>
+		</details>
+	
+					</div>
+			  
+		<div class="margin-top-xxs">
+			<div class="level margin-none">
+				<div class="level-left">
+					<div class="buttons margin-block-xxs margin-top-xs">
+						
+				<span
+					class="font-size-md has-text-secondary align-self-flex-start padding-inline-xxs margin-xxs"
+					title="No comments"
+				>
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-comment-outline"></span>
+					</span>
+					<span aria-hidden="true">0</span>
+					<span class="visually-hidden">No comments</span>
+				</span>
+		  
+						<div class="is-hidden-desktop margin-right-xxs">
+							
+										<a class="link-button font-size-sm font-weight-semibold docs-sign-in" href="#">
+											Sign in to follow
+										</a>
+								  
+						</div>
+						
+		
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary  qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="296816"
+			data-entityType="question"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+					</div>
+				</div>
+				<div class="level-right is-full-height">
+					 <div id="question-vote">
+								<button
+									title="You have the same or similar question"
+									class="link-button font-size-sm sign-in-modal "
+									data-id="296816"
+									data-bi-name="question-vote-up"
+								>
+									I have the same question
+								</button>
+								<span
+									id="question-vote-total"
+									class="tag is-small border-radius-rounded margin-left-xxs "
+								>
+									<span class="vote-count" aria-hidden="true">3</span>
+									<span class="vote-text visually-hidden"
+										>{count} votes</span
+									>
+								</span>
+						  </div>
+				</div>
+			</div>
+			<div class="question-vote-error"></div>
+			
+		<div id="question-296816-expander" class="width-full">
+			<div class="expandable is-expanded">
+				<div id="question-296816-moreThan">
+					
+		<ol>
+			
+		</ol>
+	
+				</div>
+				
+			</div>
+		</div>
+	
+			
+		<hr class="hr margin-top-xxs margin-bottom-xxs" />
+		
+					<a class="link-button font-size-sm margin-right-sm docs-sign-in" href="#">
+						Sign in to comment
+					</a>
+			  
+	
+		</div>
+	
+				</div>
+				<div id="answers" class="column is-full">
+					<div class="margin-top-xxs">
+						
+		
+		<article
+			class="card is-branded border-color-success padding-none margin-bottom-lg margin-top-md"
+		>
+			<div
+				class="card-header background-color-success color-success-invert padding-xxs padding-inline-sm margin-bottom-none font-weight-semibold"
+			>
+				<span
+					class="icon docon docon-status-circle-checkmark color-success background-color-success-invert border-radius-rounded font-size-lg margin-right-xxs"
+					aria-hidden="true"
+				></span>
+				<span>Accepted answer</span>
+			</div>
+			<div class="card-content padding-none margin-none">
+				<ol class="list-style-none">
+					
+					
+		<li
+			id="answer-297891"
+			class="margin-sm"
+			itemprop="suggestedAnswer"
+			itemscope
+			itemtype="https://schema.org/Answer0"
+		>
+			<div class="columns is-multiline ">
+				<div class="column is-12">
+					<div class="margin-bottom-xxs">
+						 
+					</div>
+					<div class="level margin-none align-items-flex-start">
+						
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div class="image is-32x32 margin-right-xxs">
+					<img
+						class="border-radius-rounded"
+						loading="lazy"
+						alt=""
+						src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+					/>
+			  </div> <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=3a6b047a-45c9-4555-8812-d37974ceddc5"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Timon Yang-MSFT </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">9,511</span>
+						<span class="is-visually-hidden">Reputation points</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2021-03-04T02:03:02.497+00:00" class="is-visually-hidden">2021-03-04T02:03:02.497+00:00</local-time> </span>
+			</div>
+		
+					</div>
+					<div>
+						<div class="content" itemprop="text"><p>You need use IncludeNativeLibrariesForSelfExtract or IncludeAllContentForSelfExtract.     </p>
+<p>Either use it like this in the .Net CLI:    </p>
+<pre><code>dotnet publish -r win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true --self-contained true  
+</code></pre>
+<p>Either add it in the projectName.csproj file:    </p>
+<pre><code> &lt;IncludeAllContentForSelfExtract&gt;true&lt;/IncludeAllContentForSelfExtract&gt;  
+</code></pre>
+<p>In this way, there will be only one exe file and one pdb file after release.    </p>
+<hr />
+<p>If the response is helpful, please click &quot;<strong>Accept Answer</strong>&quot; and upvote it.    <br />
+<strong>Note: Please follow the steps in our <a href="https://learn.microsoft.com/en-us/answers/articles/67444/email-notifications.html">documentation</a> to enable e-mail notifications if you want to receive the related email notification for this thread.</strong>    </p>
+</div>
+					</div>
+					<div>
+						
+						
+						<div class="buttons margin-block-xxs margin-top-xs">
+							
+				<button
+					class="comment-expander button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary "
+					aria-expanded=false
+					aria-controls="question-answer0-297891-expander"
+					
+					data-show-more=""
+					data-title="Show comments for this answer"
+					data-expanded-title="Hide comments for this answer"
+					title="Show comments for this answer"
+				>
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-comment-outline"></span>
+					</span>
+					<span aria-hidden="true">6</span>
+					<span class="visually-hidden show-more-text">
+						Show comments for this answer
+					</span>
+				</button>
+		  
+							
+		
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary  qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="297891"
+			data-entityType="answer"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+						</div>
+						
+		<div id="question-answer0-297891-expander" class="width-full">
+			<div class="expandable ">
+				<div id="question-answer0-297891-moreThan">
+					
+		<ol>
+			
+					<li
+						id="comment-298490"
+						data="0"
+						class="margin-top-xxs is-unstyled padding-block-xxs
+							margin-bottom-xxs
+							"
+					>
+						<div class="display-flex flex-direction-row">
+							<div class="image is-32x32 margin-top-xs margin-right-xxs">
+								<img
+									class="border-radius-rounded"
+									loading="lazy"
+									alt=""
+									src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+								/>
+							</div>
+							<div class="has-body-background-dark padding-xs is-full-width">
+								
+								<div
+									
+									class="level margin-none align-items-flex-start"
+								>
+									
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=8ef43add-cb02-4b70-92b7-1f587a386006"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Andrew Fraser </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">41</span>
+						<span class="is-visually-hidden">Reputation points</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2021-03-04T08:35:14.927+00:00" class="is-visually-hidden">2021-03-04T08:35:14.927+00:00</local-time> </span>
+			</div>
+		
+								</div>
+								<div>
+									 <div class="content font-size-sm">
+												<p>The CLI version worked perfectly.  <br />
+Many thanks  </p>
+<p>Andy</p>
+
+										  </div>
+								</div>
+							</div>
+						</div>
+						
+									<div
+										class="margin-top-xxs margin-left-md padding-left-xxs answer-comment-holder"
+									>
+										
+		
+		<button
+			class="comment-vote button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm sign-in-modal "
+			title="This comment is helpful"
+			data-bi-name="comment-vote-up"
+			data-id="298490"
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span class="vote-count" aria-hidden="true">0</span>
+			<span class="vote-text visually-hidden"
+				>{count} votes</span
+			>
+		</button>
+	
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="298490"
+			data-entityType="comment"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+										<div class="comment-vote-error"></div>
+									</div>
+							  
+					</li>
+				
+					<li
+						id="comment-304042"
+						data="1"
+						class="margin-top-xxs is-unstyled padding-block-xxs
+							margin-bottom-xxs
+							"
+					>
+						<div class="display-flex flex-direction-row">
+							<div class="image is-32x32 margin-top-xs margin-right-xxs">
+								<img
+									class="border-radius-rounded"
+									loading="lazy"
+									alt=""
+									src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+								/>
+							</div>
+							<div class="has-body-background-dark padding-xs is-full-width">
+								
+								<div
+									
+									class="level margin-none align-items-flex-start"
+								>
+									
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=8ef43add-cb02-4b70-92b7-1f587a386006"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Andrew Fraser </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">41</span>
+						<span class="is-visually-hidden">Reputation points</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2021-03-08T14:57:56.313+00:00" class="is-visually-hidden">2021-03-08T14:57:56.313+00:00</local-time> </span>
+			</div>
+		
+								</div>
+								<div>
+									 <div class="content font-size-sm">
+												<p>Has .NET 5 changed recently - the dotnet publish command above which worked fine for me last week is now giving me the error:  </p>
+<p>Required argument missing for option: --runtime  </p>
+<p>Andy</p>
+
+										  </div>
+								</div>
+							</div>
+						</div>
+						
+									<div
+										class="margin-top-xxs margin-left-md padding-left-xxs answer-comment-holder"
+									>
+										
+		
+		<button
+			class="comment-vote button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm sign-in-modal "
+			title="This comment is helpful"
+			data-bi-name="comment-vote-up"
+			data-id="304042"
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span class="vote-count" aria-hidden="true">0</span>
+			<span class="vote-text visually-hidden"
+				>{count} votes</span
+			>
+		</button>
+	
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="304042"
+			data-entityType="comment"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+										<div class="comment-vote-error"></div>
+									</div>
+							  
+					</li>
+				
+					<li
+						id="comment-304708"
+						data="2"
+						class="margin-top-xxs is-unstyled padding-block-xxs
+							margin-bottom-xxs
+							"
+					>
+						<div class="display-flex flex-direction-row">
+							<div class="image is-32x32 margin-top-xs margin-right-xxs">
+								<img
+									class="border-radius-rounded"
+									loading="lazy"
+									alt=""
+									src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+								/>
+							</div>
+							<div class="has-body-background-dark padding-xs is-full-width">
+								
+								<div
+									
+									class="level margin-none align-items-flex-start"
+								>
+									
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=3a6b047a-45c9-4555-8812-d37974ceddc5"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Timon Yang-MSFT </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">9,511</span>
+						<span class="is-visually-hidden">Reputation points</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2021-03-09T01:59:43.363+00:00" class="is-visually-hidden">2021-03-09T01:59:43.363+00:00</local-time> </span>
+			</div>
+		
+								</div>
+								<div>
+									 <div class="content font-size-sm">
+												<p><a href="/users/na/?userid=8ef43add-cb02-4b70-92b7-1f587a386006">@Andrew Fraser  </a>     <br />
+I created a new console application for .Net 5 and published it, but everything was the same as before, and I did not encounter this error.    <br />
+I did some searches but couldn't find any recent changes made in .Net 5 that might cause this problem.    <br />
+Maybe you can try to refer to the example in <a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-publish#examples">this link</a> to add the runtime option to see if it is useful.    <br />
+Have you tried the second method I proposed? Open the project folder, find the .csproj file, add this information, and then publish it in Visual Studio in the normal way.    </p>
+<pre><code>&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;  
+  &lt;PropertyGroup&gt;  
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;  
+    &lt;TargetFramework&gt;net5.0&lt;/TargetFramework&gt;  
+    &lt;IncludeAllContentForSelfExtract&gt;true&lt;/IncludeAllContentForSelfExtract&gt;  
+  &lt;/PropertyGroup&gt;  
+&lt;/Project&gt;  
+</code></pre>
+
+										  </div>
+								</div>
+							</div>
+						</div>
+						
+									<div
+										class="margin-top-xxs margin-left-md padding-left-xxs answer-comment-holder"
+									>
+										
+		
+		<button
+			class="comment-vote button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm sign-in-modal "
+			title="This comment is helpful"
+			data-bi-name="comment-vote-up"
+			data-id="304708"
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span class="vote-count" aria-hidden="true">0</span>
+			<span class="vote-text visually-hidden"
+				>{count} votes</span
+			>
+		</button>
+	
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="304708"
+			data-entityType="comment"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+										<div class="comment-vote-error"></div>
+									</div>
+							  
+					</li>
+				
+					<li
+						id="comment-305287"
+						data="3"
+						class="margin-top-xxs is-unstyled padding-block-xxs
+							margin-bottom-xxs
+							"
+					>
+						<div class="display-flex flex-direction-row">
+							<div class="image is-32x32 margin-top-xs margin-right-xxs">
+								<img
+									class="border-radius-rounded"
+									loading="lazy"
+									alt=""
+									src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+								/>
+							</div>
+							<div class="has-body-background-dark padding-xs is-full-width">
+								
+								<div
+									
+									class="level margin-none align-items-flex-start"
+								>
+									
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=8ef43add-cb02-4b70-92b7-1f587a386006"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Andrew Fraser </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">41</span>
+						<span class="is-visually-hidden">Reputation points</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2021-03-09T08:33:11.387+00:00" class="is-visually-hidden">2021-03-09T08:33:11.387+00:00</local-time> </span>
+			</div>
+		
+								</div>
+								<div>
+									 <div class="content font-size-sm">
+												<p>Yes, the second option of updating the project file and publishing the app works as expected.  <br />
+Strange that -r now seems to expect a parameter rather that using the default value as mentioned in the help.  </p>
+<p>Thanks for your help.  </p>
+<p>Andy</p>
+
+										  </div>
+								</div>
+							</div>
+						</div>
+						
+									<div
+										class="margin-top-xxs margin-left-md padding-left-xxs answer-comment-holder"
+									>
+										
+		
+		<button
+			class="comment-vote button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm sign-in-modal "
+			title="This comment is helpful"
+			data-bi-name="comment-vote-up"
+			data-id="305287"
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span class="vote-count" aria-hidden="true">0</span>
+			<span class="vote-text visually-hidden"
+				>{count} votes</span
+			>
+		</button>
+	
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="305287"
+			data-entityType="comment"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+										<div class="comment-vote-error"></div>
+									</div>
+							  
+					</li>
+				
+					<li
+						id="comment-873448"
+						data="4"
+						class="margin-top-xxs is-unstyled padding-block-xxs
+							margin-bottom-xxs
+							"
+					>
+						<div class="display-flex flex-direction-row">
+							<div class="image is-32x32 margin-top-xs margin-right-xxs">
+								<img
+									class="border-radius-rounded"
+									loading="lazy"
+									alt=""
+									src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+								/>
+							</div>
+							<div class="has-body-background-dark padding-xs is-full-width">
+								
+								<div
+									
+									class="level margin-none align-items-flex-start"
+								>
+									
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=3f4d6771-2fb2-480e-acb3-d61ffea7b0ec"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Penn, David </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">1</span>
+						<span class="is-visually-hidden">Reputation point</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2022-06-01T19:27:22.91+00:00" class="is-visually-hidden">2022-06-01T19:27:22.91+00:00</local-time> </span>
+			</div>
+		
+								</div>
+								<div>
+									 <div class="content font-size-sm">
+												<p>This simply doesn't work.  I have the EXACT .csproj you have below.  It creates the .exe with a .dll next to it.  If you copy just the .exe to another folder and run it you get:  <br />
+The application to execute does not exist: 'c:\temp\app.dll'.  </p>
+<p>The CLI approach does work properly however.</p>
+
+										  </div>
+								</div>
+							</div>
+						</div>
+						
+									<div
+										class="margin-top-xxs margin-left-md padding-left-xxs answer-comment-holder"
+									>
+										
+		
+		<button
+			class="comment-vote button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm sign-in-modal "
+			title="This comment is helpful"
+			data-bi-name="comment-vote-up"
+			data-id="873448"
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span class="vote-count" aria-hidden="true">0</span>
+			<span class="vote-text visually-hidden"
+				>{count} votes</span
+			>
+		</button>
+	
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="873448"
+			data-entityType="comment"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+										<div class="comment-vote-error"></div>
+									</div>
+							  
+					</li>
+				
+					<li
+						id="comment-999913"
+						data="5"
+						class="margin-top-xxs is-unstyled padding-block-xxs
+							
+							expandable"
+					>
+						<div class="display-flex flex-direction-row">
+							<div class="image is-32x32 margin-top-xs margin-right-xxs">
+								<img
+									class="border-radius-rounded"
+									loading="lazy"
+									alt=""
+									src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+								/>
+							</div>
+							<div class="has-body-background-dark padding-xs is-full-width">
+								
+								<div
+									
+									class="level margin-none align-items-flex-start"
+								>
+									
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=271f3961-7957-4ac1-949c-e2316f297968"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Nicolas </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">1</span>
+						<span class="is-visually-hidden">Reputation point</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2022-09-08T20:21:36.43+00:00" class="is-visually-hidden">2022-09-08T20:21:36.43+00:00</local-time> </span>
+			</div>
+		
+								</div>
+								<div>
+									 <div class="content font-size-sm">
+												<p>I found out that using the .csproj way works, but simply not when debugging. To get a single file using only the modified .csproj, you need to right click the project than click on &quot;publish...&quot;</p>
+
+										  </div>
+								</div>
+							</div>
+						</div>
+						
+									<div
+										class="margin-top-xxs margin-left-md padding-left-xxs answer-comment-holder"
+									>
+										
+		
+		<button
+			class="comment-vote button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm sign-in-modal "
+			title="This comment is helpful"
+			data-bi-name="comment-vote-up"
+			data-id="999913"
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span class="vote-count" aria-hidden="true">0</span>
+			<span class="vote-text visually-hidden"
+				>{count} votes</span
+			>
+		</button>
+	
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary button-sm qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="999913"
+			data-entityType="comment"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-sm button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+										<div class="comment-vote-error"></div>
+									</div>
+							  
+					</li>
+				
+		</ol>
+	
+				</div>
+				 <button
+							class="link-button font-size-sm margin-block-xs"
+							aria-expanded="false"
+							aria-controls="question-answer0-297891-moreThan"
+							data-show-more=""
+							data-show-once="true"
+							data-title="Show 1 more comment"
+					  >
+							Show 1 more comment
+					  </button>
+			</div>
+		</div>
+	
+						
+		<hr class="hr margin-top-xxs margin-bottom-xxs" />
+		
+					<a class="link-button font-size-sm margin-right-sm docs-sign-in" href="#">
+						Sign in to comment
+					</a>
+			  
+	
+					</div>
+				</div>
+			</div>
+		</li>
+	
+				</ol>
+			</div>
+		</article>
+	
+		<div class="level">
+			<div class="level-left">
+				<h2 class="title is-4">2 additional answers</h2>
+			</div>
+			<div class="level-right">
+				
+		<details class="popover">
+			<summary class="button button-clear">
+				<span
+					>Sort by: 
+		<span class="has-text-primary font-weight-semibold">
+			Most helpful
+			<span class="icon" aria-hidden="true">
+				<span class="expanded-indicator docon docon-chevron-down-light"></span>
+			</span>
+		</span></span
+				>
+			</summary>
+			<div class="popover-content padding-none">
+				 <a
+			aria-label="Sort by: Most helpful"
+			class="button button-clear has-inner-focus button-block text-decoration-none justify-content-flex-start is-hovered"
+			aria-current=page
+			href="?orderby=helpful#answers"
+			>Most helpful</a
+		> <a
+			aria-label="Sort by: Newest"
+			class="button button-clear has-inner-focus button-block text-decoration-none justify-content-flex-start "
+			
+			href="?orderby=newest#answers"
+			>Newest</a
+		> <a
+			aria-label="Sort by: Oldest"
+			class="button button-clear has-inner-focus button-block text-decoration-none justify-content-flex-start "
+			
+			href="?orderby=oldest#answers"
+			>Oldest</a
+		>
+			</div>
+		</details>
+	
+			</div>
+		</div>
+		<ol class="list-style-none">
+			
+		<li
+			id="answer-885154"
+			class="margin-bottom-sm padding-block-sm border"
+			itemprop="suggestedAnswer"
+			itemscope
+			itemtype="https://schema.org/Answer0"
+		>
+			<div class="columns is-multiline margin-left-xs margin-right-xs">
+				<div class="column is-12">
+					<div class="margin-bottom-xxs">
+						 
+					</div>
+					<div class="level margin-none align-items-flex-start">
+						
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div class="image is-32x32 margin-right-xxs">
+					<img
+						class="border-radius-rounded"
+						loading="lazy"
+						alt=""
+						src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+					/>
+			  </div> <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=6f6bb61e-afe6-4f38-9f92-62a4655b7267"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Bruce (SqlWork.com) </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">29,981</span>
+						<span class="is-visually-hidden">Reputation points</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2022-06-10T17:36:29.047+00:00" class="is-visually-hidden">2022-06-10T17:36:29.047+00:00</local-time> </span>
+			</div>
+		
+					</div>
+					<div>
+						<div class="content" itemprop="text"><p>the &lt;IncludeAllContentForSelfExtract&gt; tell the publish, that you want the dll extracted during publish (required to debug). do not do this if you want a single file. also you need to supply a runtime.     </p>
+<pre><code>&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;  
+  &lt;PropertyGroup&gt;  
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;  
+    &lt;TargetFramework&gt;net6.0&lt;/TargetFramework&gt;  
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;  
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;  
+    &lt;PublishSingleFile&gt;true&lt;/PublishSingleFile&gt;  
+    &lt;RuntimeIdentifier&gt;osx.12-arm64&lt;/RuntimeIdentifier&gt;  
+  &lt;/PropertyGroup&gt;  
+&lt;/Project&gt;  
+</code></pre>
+<p>Note: for MacOs the Mac app bundler format is used, so there are fewer restrictions than windows.    </p>
+</div>
+					</div>
+					<div>
+						
+						
+						<div class="buttons margin-block-xxs margin-top-xs">
+							
+				<span
+					class="font-size-md has-text-secondary align-self-flex-start padding-inline-xxs margin-xxs"
+					title="No comments"
+				>
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-comment-outline"></span>
+					</span>
+					<span aria-hidden="true">0</span>
+					<span class="visually-hidden">No comments</span>
+				</span>
+		  
+							
+		
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary  qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="885154"
+			data-entityType="answer"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+						</div>
+						
+		<div id="question-answer0-885154-expander" class="width-full">
+			<div class="expandable ">
+				<div id="question-answer0-885154-moreThan">
+					
+		<ol>
+			
+		</ol>
+	
+				</div>
+				
+			</div>
+		</div>
+	
+						
+		<hr class="hr margin-top-xxs margin-bottom-xxs" />
+		
+					<a class="link-button font-size-sm margin-right-sm docs-sign-in" href="#">
+						Sign in to comment
+					</a>
+			  
+	
+					</div>
+				</div>
+			</div>
+		</li>
+	 
+		<li
+			id="answer-1017164"
+			class="margin-bottom-sm padding-block-sm border"
+			itemprop="suggestedAnswer"
+			itemscope
+			itemtype="https://schema.org/Answer1"
+		>
+			<div class="columns is-multiline margin-left-xs margin-right-xs">
+				<div class="column is-12">
+					<div class="margin-bottom-xxs">
+						 
+					</div>
+					<div class="level margin-none align-items-flex-start">
+						
+			<div class="level-left flex-direction-column">
+				<div class="display-flex align-items-center">
+					  <div class="image is-32x32 margin-right-xxs">
+					<img
+						class="border-radius-rounded"
+						loading="lazy"
+						alt=""
+						src="https://learn.microsoft.com/en-us/media/profile/user-profile.png"
+					/>
+			  </div> <div
+			class="has-line-height-reset has-text-wrap "
+		>
+			<span class="display-block"
+						><a
+							href="/en-us/users/na/?userid=cdefa112-fb97-4722-af67-f085c1458193"
+							class="profile-url has-text-color font-size-sm font-weight-semibold"
+						>
+							Rajib Chy </a
+						>
+				  </span>
+			<span class="display-block font-size-xs has-text-subtle">
+						<span title="Reputation points">1</span>
+						<span class="is-visually-hidden">Reputation point</span> 
+				  </span>
+		</div>
+				</div>
+			</div>
+			<div class="level-right margin-top-none">
+				<span class="font-size-xs"> <local-time format="datetime" datetime="2022-09-21T08:34:59.98+00:00" class="is-visually-hidden">2022-09-21T08:34:59.98+00:00</local-time> </span>
+			</div>
+		
+					</div>
+					<div>
+						<div class="content" itemprop="text"><p>try as following with <code>.Net core 6.0.*</code>     </p>
+<pre><code>&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;  
+  &lt;PropertyGroup&gt;  
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;  
+    &lt;TargetName&gt;trade-plus&lt;/TargetName&gt;  
+    &lt;TargetFramework&gt;net6.0-windows&lt;/TargetFramework&gt;  
+    &lt;RuntimeIdentifier&gt;win-x64&lt;/RuntimeIdentifier&gt;  
+    &lt;PlatformTarget&gt;x64&lt;/PlatformTarget&gt;  
+    &lt;AssemblyName&gt;app-assembly-name&lt;/AssemblyName&gt;  
+    &lt;Version&gt;1.0.0.1&lt;/Version&gt;  
+    &lt;FileVersion&gt;1.0.0.1&lt;/FileVersion&gt;  
+    &lt;Platforms&gt;x64&lt;/Platforms&gt;  
+  &lt;/PropertyGroup&gt;  
+  &lt;PropertyGroup Condition=&quot;'$(Configuration)|$(Platform)'=='Release|x64'&quot;&gt;  
+    &lt;PlatformTarget&gt;x64&lt;/PlatformTarget&gt;  
+    &lt;Optimize&gt;True&lt;/Optimize&gt;  
+    &lt;DebugType&gt;none&lt;/DebugType&gt;  
+  &lt;/PropertyGroup&gt;  
+  &lt;PropertyGroup&gt;  
+    &lt;ProduceReferenceAssembly&gt;False&lt;/ProduceReferenceAssembly&gt;  
+  &lt;/PropertyGroup&gt;  
+&lt;/Project&gt;  
+</code></pre>
+<p>and run this command at respective project directory <code>dotnet publish -r win-x64 -c Release -o bin/win-x64/native /p:SelfContained=true /p:PublishSingleFile=true /p:PublishReadyToRun=true</code>    <br />
+read more <a href="https://learn.microsoft.com/en-us/dotnet/core/deploying/single-file/overview?tabs=cli">Single-file deployment and executable</a>    </p>
+</div>
+					</div>
+					<div>
+						
+						
+						<div class="buttons margin-block-xxs margin-top-xs">
+							
+				<span
+					class="font-size-md has-text-secondary align-self-flex-start padding-inline-xxs margin-xxs"
+					title="No comments"
+				>
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-comment-outline"></span>
+					</span>
+					<span aria-hidden="true">0</span>
+					<span class="visually-hidden">No comments</span>
+				</span>
+		  
+							
+		
+		
+		<button
+			title="Report"
+			class="button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary  qna-signin-report"
+			data-list-type="report"
+			data-bi-name="report"
+			data-questionId="296816"
+			data-entityId="1017164"
+			data-entityType="answer"
+			data-action="/api/questions/moderation/report?_method=PUT"
+			data-page-action-item="overflow-mobile"
+		>
+			<span class="icon margin-none" aria-hidden="true">
+				<span class="docon docon-flag"></span>
+			</span>
+			<span class="is-visually-hidden">Report</span>
+		</button>
+	
+		<details
+			class="popover display-none"
+			id="article-header-page-actions-overflow"
+		>
+			<summary
+				class="justify-content-flex-start button button-clear text-decoration-none has-inner-focus margin-bottom-none button-primary"
+				aria-label="More actions"
+				title="More actions"
+			>
+				<span class="icon margin-none" aria-hidden="true">
+					<span class="docon docon-more-vertical"></span>
+				</span>
+			</summary>
+			<div class="popover-content padding-none">
+				
+				
+				
+				
+			</div>
+		</details>
+	
+						</div>
+						
+		<div id="question-answer1-1017164-expander" class="width-full">
+			<div class="expandable ">
+				<div id="question-answer1-1017164-moreThan">
+					
+		<ol>
+			
+		</ol>
+	
+				</div>
+				
+			</div>
+		</div>
+	
+						
+		<hr class="hr margin-top-xxs margin-bottom-xxs" />
+		
+					<a class="link-button font-size-sm margin-right-sm docs-sign-in" href="#">
+						Sign in to comment
+					</a>
+			  
+	
+					</div>
+				</div>
+			</div>
+		</li>
+	 
+		</ol>
+	
+						
+						<a class="link-button font-size-sm margin-right-sm docs-sign-in" href="#"
+									>Sign in to answer</a
+							  >
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+									<div id="right-container" class="right-container column is-full is-4-desktop">
+										
+		<article
+			class="display-none display-block-desktop overflow-hidden margin-top-none"
+		>
+			<h3>
+				<span class="icon">
+					<span class="docon docon-chat-bubbles-question"></span>
+				</span>
+				<span>Activity</span>
+			</h3>
+
+			<div class="border-top padding-top-xs margin-top-xxs">
+		
+					<a class="button button-primary button-block button-filled docs-sign-in" href="#">
+						Sign in to follow questions and users
+					</a>
+			  
+	</div>
+		</article>
+	
+									</div>
+								</div>
+							</section>
+						</div>
+					</div>
+				</main>
+			</div>
+		</div>
+	
+				
+		<footer
+			id="footer"
+			data-bi-name="footer"
+			class="footer-layout uhf-container has-padding has-default-focus"
+			role="contentinfo"
+		>
+			<div class="display-flex is-full-height padding-right-lg-desktop">
+				
+				<div class="margin-inline-xs flex-shrink-0">
+					
+		<div class="dropdown has-caret-up">
+			<button
+				class="dropdown-trigger button button-clear button-sm has-inner-focus theme-dropdown-trigger"
+				aria-controls="{{ themeMenuId }}"
+				aria-expanded="false"
+				title="Theme"
+				data-bi-name="theme"
+			>
+				<span class="icon">
+					<span class="docon docon-sun" aria-hidden="true"></span>
+				</span>
+				<span>Theme</span>
+			</button>
+			<div class="dropdown-menu" id="{{ themeMenuId }}" role="menu">
+				<ul class="theme-selector padding-xxs">
+					<li class="theme display-block">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start"
+							data-theme-to="light"
+						>
+							<span class="theme-light margin-right-xxs">
+								<span
+									class="theme-selector-icon css-variable-support border display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span role="menuitem"> Light </span>
+						</button>
+					</li>
+					<li class="theme display-block">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start"
+							data-theme-to="dark"
+						>
+							<span class="theme-dark margin-right-xxs">
+								<span
+									class="border theme-selector-icon css-variable-support display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span role="menuitem"> Dark </span>
+						</button>
+					</li>
+					<li class="theme display-block">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start"
+							data-theme-to="high-contrast"
+						>
+							<span class="theme-high-contrast margin-right-xxs">
+								<span
+									class="border theme-selector-icon css-variable-support display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span role="menuitem"> High contrast </span>
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+	
+				</div>
+			</div>
+			<ul class="links" data-bi-name="footerlinks">
+				<li class="manage-cookies-holder" hidden=""></li>
+				<li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/previous-versions/"
+			data-bi-name="archivelink"
+			class=""
+			id=""
+			title=""
+			>Previous Versions</a
+		>
+	
+	</li> <li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://techcommunity.microsoft.com/t5/microsoft-learn-blog/bg-p/MicrosoftLearnBlog"
+			data-bi-name="bloglink"
+			class=""
+			id=""
+			title=""
+			>Blog</a
+		>
+	
+	</li> <li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/contribute"
+			data-bi-name="contributorGuide"
+			class=""
+			id=""
+			title=""
+			>Contribute</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://go.microsoft.com/fwlink/?LinkId=521839"
+			data-bi-name="privacy"
+			class=""
+			id=""
+			title=""
+			>Privacy</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/legal/termsofuse"
+			data-bi-name="termsofuse"
+			class=""
+			id=""
+			title=""
+			>Terms of Use</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://aka.ms/msftqacodeconduct"
+			data-bi-name="codeofconduct"
+			class=""
+			id=""
+			title=""
+			>Code of Conduct</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/"
+			data-bi-name="trademarks"
+			class=""
+			id=""
+			title=""
+			>Trademarks</a
+		>
+	
+	</li>
+				<li>&copy; Microsoft 2023</li>
+			</ul>
+		</footer>
+	
+			</body>
+		</html>
+	
